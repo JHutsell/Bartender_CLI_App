@@ -1,2 +1,2 @@
 # Bartender_CLI_App
-Bartender command line application, made with Ruby and ActiveRecord
+Bartender command line application, made with Ruby, ActiveRecord, and TTY-Prompt
