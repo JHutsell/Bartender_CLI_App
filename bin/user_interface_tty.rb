@@ -8,6 +8,10 @@ def tty_home
     TTY::Prompt.new.select("Welcome to Command Line Cocktails!") do |menu|
         menu.choice "Hi! I'm actually a VIP here 😎  (login)" => -> do tty_login end
         menu.choice "Hey there! I heard about this place from a friend 😌  (new user)" => -> do tty_create_user end
+        menu.choice "Exit Bar" => -> do 
+            #ASCII image
+            exit
+        end
     end
 end
 
@@ -41,10 +45,7 @@ def tty_main_menu
         if !$customer.favorites.empty?
             menu.choice "Choose from your list of favorite cocktails? 😍" => -> do tty_favorites end
         end
-        menu.choice "It's been so real. Buuuuuut my cat needs to be fed. Bye for now !" => -> do 
-            #ASCII image
-            exit
-        end
+        menu.choice "It's been so real. Buuuuuut my cat needs to be fed. Bye for now !" => -> do tty_home end
     end
     
 end
