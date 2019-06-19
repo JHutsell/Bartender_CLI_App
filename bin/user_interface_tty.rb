@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.require
+system "clear"
 
 
 def tty_home 
@@ -29,6 +30,7 @@ def tty_login
 end
 
 def tty_main_menu 
+    system "clear"
     $customer.reload
     TTY::Prompt.new.select("Would you like to...") do |menu|
         menu.choice "Try one of our famous cocktails? 🍸" => -> do tty_our_drinks end
@@ -39,8 +41,12 @@ def tty_main_menu
         if !$customer.favorites.empty?
             menu.choice "Choose from your list of favorite cocktails? 😍" => -> do tty_favorites end
         end
+        menu.choice "It's been so real. Buuuuuut my cat needs to be fed. Bye for now !" => -> do 
+            #ASCII image
+            exit
+        end
     end
-
+    
 end
 
 #List of Premade options
@@ -153,9 +159,11 @@ def tty_view_custom_cocktail
         if !$current_custom_cocktail.ingredients.empty?
             menu.choice "Ooo something's not right 😟  (Delete an ingredient)" => -> do tty_remove_from_custom_cocktail end
         end
-        menu.choice "Actually, this drink isn't very good. 👎  (Destroy)" => -> do 
-            CustomCocktail.delete($current_custom_cocktail.id)
-            tty_custom_cocktails
+        if $customer.custom_cocktails
+            menu.choice "Actually, this drink isn't very good. 👎  (Destroy)" => -> do 
+                CustomCocktail.delete($current_custom_cocktail.id)
+                tty_main_menu
+            end
         end
     end
 end
@@ -172,11 +180,4 @@ def tty_remove_from_custom_cocktail
     end
 
 end
-
-
-# if CustomIngredient.ingredient_id == ingredient.id 
-#     menu.choice "#{ingredient.name} (Remove)" => -> do  
-#         CustomIngredient.delete(ingredient_id)
-#     end
-# else
 
