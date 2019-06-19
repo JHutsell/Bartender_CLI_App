@@ -15,7 +15,7 @@ class GetIngredients
 
     def name_list
         ingredients = JSON.parse(self.get_ingredients)
-        ingredients["drinks"].map {|ingredient| ingredient["strIngredient1"] } 
+        ingredients["drinks"].map {|ingredient| ingredient["strIngredient1"] }.sort
     end
 
 
