@@ -29,6 +29,7 @@ def tty_login
 end
 
 def tty_main_menu 
+    $customer.reload
     TTY::Prompt.new.select("Would you like to...") do |menu|
         menu.choice "Try one of our famous cocktails? 🍸" => -> do tty_our_drinks end
         menu.choice "Create a custom drink of your own? 🤪" => -> do tty_create_drink end
@@ -42,6 +43,7 @@ def tty_main_menu
 
 end
 
+#List of Premade options
 def tty_our_drinks 
     TTY::Prompt.new.select("Would you like an alcoholic or non alcoholic cocktail?") do |menu|
         menu.choice "Alcoholic 😈" => -> do tty_alcoholic_drinks end
@@ -75,11 +77,12 @@ def tty_boring_drinks
     end
 end
 
+#Favorites Functionality
 def tty_favorite?
     TTY::Prompt.new.select("How did you like your drink?") do |menu|
         menu.choice "I loved it!!!😋  (Add to Favorites)" => -> do
             Favorite.create({customer_id: $customer.id, cocktail_id: $cocktail.id})
-            tty_customer_favorites
+            tty_favorites
         end
         menu.choice "Eh, I wouldn't try it again honestly.🙃  (Don't add to Favorites)" => -> do 
             puts "Oh sorry about that 😖"
@@ -87,3 +90,93 @@ def tty_favorite?
         end
     end
 end
+
+def tty_favorites 
+    TTY::Prompt.new.select("These are the drinks you've really liked so far:") do |menu|
+        menu.choice "Can I see the menu please? (Main Menu)" => -> do tty_main_menu end
+        $customer.favorites.each do |favorite|
+            menu.choice "#{favorite.cocktail.name}" => -> do 
+            $current_favorite = favorite
+            tty_fav_options 
+            end
+        end
+    end
+end
+
+def tty_fav_options 
+    TTY::Prompt.new.select("#{$current_favorite.cocktail.name}") do |menu|
+        menu.choice "Can I get one of these? 🥃  (Remain a favorite)" => -> do tty_main_menu end
+        menu.choice "This is gross. How did it end up on my favorites list? 🤢  (Remove from Favorites)" => -> do 
+            Favorite.delete($current_favorite.id)
+            puts "Successfully deleted. Sorry about that. 😓"
+            tty_main_menu
+        end
+    end
+end
+
+#Custom Cocktail Functionality
+def tty_custom_cocktails 
+    TTY::Prompt.new.select("These are the cocktails you've created:") do |menu|
+        $customer.custom_cocktails.each do |custom_cocktail|
+            menu.choice "#{custom_cocktail.name}" => -> do 
+                $current_custom_cocktail = custom_cocktail
+                tty_view_custom_cocktail
+            end
+        end
+    end
+end
+
+def tty_create_drink
+    $custom_cocktail_name = TTY::Prompt.new.ask("What would you like to name your drink?")
+    $current_custom_cocktail = CustomCocktail.create({customer_id: $customer.id, name: $custom_cocktail_name})
+    tty_add_to_custom_cocktail
+end
+
+def tty_add_to_custom_cocktail 
+    TTY::Prompt.new.select("What would you like to add?") do |menu|
+        menu.choice "That's all for now. 🤓" => -> do tty_view_custom_cocktail end
+        Ingredient.all.each do |ingredient|
+            menu.choice "#{ingredient.name}" => -> do 
+                CustomIngredient.create({custom_cocktail_id: $current_custom_cocktail.id, ingredient_id: ingredient.id})
+                tty_add_to_custom_cocktail
+            end
+        end
+    end
+end
+
+def tty_view_custom_cocktail 
+    $customer.reload
+    $current_custom_cocktail.reload
+    TTY::Prompt.new.select("#{$current_custom_cocktail.name}") do |menu|
+        menu.choice "MMM that's tasty 😛" => -> do tty_main_menu end 
+        menu.choice "I'd like to add to this actually 👅  (Add an ingredient)" => -> do tty_add_to_custom_cocktail end
+        if !$current_custom_cocktail.ingredients.empty?
+            menu.choice "Ooo something's not right 😟  (Delete an ingredient)" => -> do tty_remove_from_custom_cocktail end
+        end
+        menu.choice "Actually, this drink isn't very good. 👎  (Destroy)" => -> do 
+            CustomCocktail.delete($current_custom_cocktail.id)
+            tty_custom_cocktails
+        end
+    end
+end
+
+def tty_remove_from_custom_cocktail 
+    TTY::Prompt.new.select("Which ingredient would you like to remove?") do |menu|
+        $current_custom_cocktail.ingredients.each do |ingredient_i|
+            menu.choice "#{ingredient_i.name}" => -> do 
+                $bad_ingredient = CustomIngredient.find_by(ingredient_id: ingredient_i.id)
+                CustomIngredient.delete($bad_ingredient.id)
+                tty_view_custom_cocktail
+            end
+        end
+    end
+
+end
+
+
+# if CustomIngredient.ingredient_id == ingredient.id 
+#     menu.choice "#{ingredient.name} (Remove)" => -> do  
+#         CustomIngredient.delete(ingredient_id)
+#     end
+# else
+
