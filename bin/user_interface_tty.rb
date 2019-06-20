@@ -4,7 +4,7 @@ system "clear"
 
 
 def tty_home 
-    #logo 
+system 'clear'
 print "
   ______                                                                   __        __        __                     
   /      \\                                                                 /  |      /  |      /  |                    
@@ -53,6 +53,7 @@ print "
             exit
         end
     end
+    
 end
 
 def tty_create_user 
@@ -74,7 +75,8 @@ def tty_login
 end
 
 def tty_main_menu 
-    puts "
+    system 'clear'
+    print "
     (
         *                           )   *
                       )     *      (
