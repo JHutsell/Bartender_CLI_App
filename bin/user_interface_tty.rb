@@ -48,9 +48,9 @@ print "
             ║║╔═╦╦╦═╗
             ║╚╣║║║║╩╣
             ╚═╩═╩═╩═╝           
-            "
+            ".colorize(:red)
         #  5 second rest before exiting app
-            sleep 10
+            sleep 40
             system("pkill mpg123")
             exit
         end
