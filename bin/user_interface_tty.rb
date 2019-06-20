@@ -78,7 +78,7 @@ def tty_main_menu
         *     jgs   |-----|  __|__   |      *
                     `-----`        __|__ "
     $customer.reload
-    TTY::Prompt.new.select("Would you like to...") do |menu|
+    TTY::Prompt.new.select("Would you like to...", active_color: :blue) do |menu|
         menu.choice "Try one of our famous cocktails? 🍸" => -> do tty_our_drinks end
         menu.choice "Create a custom drink of your own? 🤪" => -> do tty_create_drink end
         if !$customer.custom_cocktails.empty?
@@ -101,7 +101,7 @@ def tty_our_drinks
 end
 
 def tty_alcoholic_drinks 
-    TTY::Prompt.new.select("Select one of these delicious options:", filter: true) do |menu|
+    TTY::Prompt.new.select("Select one of these delicious options:", filter: true, active_color: :red) do |menu|
         Cocktail.all.each do |cocktail|
             if cocktail.alcoholic == true
                 menu.choice "#{cocktail.name}" => -> do 
@@ -114,7 +114,7 @@ def tty_alcoholic_drinks
 end
 
 def tty_boring_drinks
-    TTY::Prompt.new.select("Select one of these delicious options:", filter: true) do |menu|
+    TTY::Prompt.new.select("Select one of these delicious options:", filter: true, active_color: :red) do |menu|
         Cocktail.all.each do |cocktail|
             if cocktail.alcoholic == false
                 menu.choice "#{cocktail.name}" => -> do 
@@ -182,7 +182,7 @@ def tty_create_drink
 end
 
 def tty_add_to_custom_cocktail 
-    TTY::Prompt.new.select("What would you like to add?",filter: true) do |menu|
+    TTY::Prompt.new.select("What would you like to add?",filter: true, active_color: :yellow) do |menu|
         menu.choice "That's all for now. 🤓" => -> do tty_view_custom_cocktail end
         Ingredient.all.each do |ingredient|
             menu.choice "#{ingredient.name}" => -> do 
