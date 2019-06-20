@@ -25,7 +25,7 @@ print "
   $$$$$$/   $$$$$$/   $$$$$$$/ $$/   $$/   $$$$/  $$$$$$$/ $$/ $$/ $$$$$$$/                                            
                                                                                                                        
                                                                                                                        
-  "                                                                                                                     
+  ".colorize(:blue)                                                                                                                     
  
     
     TTY::Prompt.new.select("Welcome to Command Line Cocktails!") do |menu|
@@ -95,7 +95,7 @@ def tty_main_menu
                 *   | \\ / |   \\_/  \\~~~/   )
                     | _Y_ |    |    \\_/   (
         *     jgs   |-----|  __|__   |      *
-                    `-----`        __|__ "
+                    `-----`        __|__ ".colorize(:green)
     $customer.reload
     TTY::Prompt.new.select("Would you like to...", active_color: :blue) do |menu|
         menu.choice "Try one of our famous cocktails? 🍸" => -> do tty_our_drinks end
