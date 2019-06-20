@@ -32,7 +32,24 @@ print "
         menu.choice "Hi! I'm actually a VIP here 😎  (login)" => -> do tty_login end
         menu.choice "Hey there! I heard about this place from a friend 😌  (new user)" => -> do tty_create_user end
         menu.choice "Exit Bar" => -> do 
+            # stop_sound
+            system("pkill mpg123")
+            # start closing time.
+            sound("audio/semisonic-closing_time.mp3")
             #ASCII image
+            print " 
+
+            █▀█░██░█▀█░█▀░██
+            █░█░█■░█▀█░█░░█➨
+            █▀▀░█▄░█░█░█▄░█▄
+            &
+            ╔╗
+            ║║╔═╦╦╦═╗
+            ║╚╣║║║║╩╣
+            ╚═╩═╩═╩═╝           
+            "
+        #  5 second rest before exiting app
+            sleep 5
             exit
         end
     end
