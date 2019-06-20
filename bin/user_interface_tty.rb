@@ -4,6 +4,7 @@ system "clear"
 
 
 def tty_home 
+
 system 'clear'
 print "
   ______                                                                   __        __        __                     
@@ -49,7 +50,8 @@ print "
             ╚═╩═╩═╩═╝           
             "
         #  5 second rest before exiting app
-            sleep 5
+            sleep 10
+            system("pkill mpg123")
             exit
         end
     end
